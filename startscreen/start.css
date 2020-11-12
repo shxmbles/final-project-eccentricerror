@@ -1,0 +1,50 @@
+body{
+    background-color: #8cd3ff;
+}
+
+#container{
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    width: 1068px;
+    height: 576px;
+    background-color: white;
+    border-radius: 25px;
+    box-shadow: 0 0 5px #296d98, 2px 2px 5px rgba(0,0,0,.1);
+}
+
+#gameTitle{
+    position: fixed;
+    margin: 140px 0px 0px 60px;
+    font-size: 60px;
+    color: #59bff5;
+    
+}
+#gameTitleContainer{
+    float: center;
+}
+#gameDefContainer{
+    position: fixed;
+    margin: 220px 0px 0px 60px;
+    width: 350px;
+    font-size: 25px;
+    border-top: solid 3px #8f8;
+    
+}
+#startButton{
+    position: fixed;
+    margin: 380px 0px 0px 60px;
+    width: 150px;
+    height: 60px;
+    background-color: #8f8;
+    border: 0px;
+    color: white;
+    font-size: large;
+   
+
+}
+
+
+
+
