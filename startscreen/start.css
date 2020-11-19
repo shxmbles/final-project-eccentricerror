@@ -15,8 +15,8 @@ body{
 }
 
 #gameTitle{
-    position: fixed;
-    margin: 140px 0px 0px 60px;
+    position: absolute;
+    margin: 100px 0px 0px 60px;
     font-size: 60px;
     color: #59bff5;
     
@@ -25,24 +25,59 @@ body{
     float: center;
 }
 #gameDefContainer{
-    position: fixed;
-    margin: 220px 0px 0px 60px;
+    position: absolute;
+    margin: 180px 0px 0px 60px;
     width: 350px;
     font-size: 25px;
     border-top: solid 3px #8f8;
     
 }
 #startButton{
-    position: fixed;
-    margin: 380px 0px 0px 60px;
+    position: absolute;
+    margin: 310px 0px 0px 60px;
     width: 150px;
     height: 60px;
     background-color: #8f8;
     border: 0px;
     color: white;
     font-size: large;
-   
+}
 
+#nav{
+    position: absolute;
+}
+ul{
+    list-style-type: none;
+    margin: 0;
+    padding: 0;
+    overflow: hidden;
+    margin-left: 200px;
+    margin-top: 0;
+    position: absolute;
+}
+li{
+    float: left;
+}
+li a{
+    display: block;
+    padding: 8px;
+    text-decoration: none;
+    color: black;
+    font-size: large;
+    margin-top: 30px;
+    
+}
+#room{
+    height: 60px;
+    width: 60px;
+    border-radius: 15px;
+    display: inline-block;
+}
+#logoWrapper{
+    margin: 0px;
+    display: inline-block;
+    margin-top: 20px;
+    margin-left: 60px;
 }
 
 
