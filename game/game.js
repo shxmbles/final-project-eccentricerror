@@ -1,213 +1,190 @@
-/*
-var context, controller, rectangle, loop;
+document.addEventListener('DOMContentLoaded', () => {
+  const grid = document.querySelector('.grid');
+  const char = document.createElement('div');
+  let startPoint = 150;
+  let charBotSpace = startPoint;
+  let charLeftSpace = 50;
+  let isGameOver = false;
+  let platList = 10;
+  let platforms = [];
+  let upTimeID;
+  let downTimeID;
+  let isJumping = true;
+  let isGoingLeft = false;
+  let isGoingRight = false;
+  let leftTimerID;
+  let rightTimerID;
+  let score = 0;
+  let highScore = 0;
 
-context = document.querySelector("canvas").getContext("2d");
-
-context.canvas.height = 180;
-context.canvas.height = 320; 
-
-rectangle = {
-    
-    height: 32,
-    jump: true,
-    width: 32, 
-    x: 144,
-    x_velocity: 0,
-    y: 0,
-    y_velocity: 0
-};
-
-controller = {
-    left: false,
-    right: false, 
-    up: false,
-    keyListener:function(event){
-        var key_state = (event.type == "keydown")?true:false;
-
-        switch(event.keyCode){
-           case 65: //a key (left)
-           controller.left = key_state;
-           break;
-           case 87: //w key (up)
-           controller.up = key_state;
-           break;
-           case 68: //d key(right)
-           controller.right = key_state;
-           break;
-        }
-    }
-};
-
-
-loop = function(){
-    if(controller.up && rectangle.jumping == false){
-        rectangle.y_velocity -= 20;
-        rectangle.jumping = true;
-    }
-    if(controller.left){
-        rectangle.x_velocity -= .05;
-    }
-    if(controller.right){
-        rectangle.x_velocity += 0.5
-    }
-}
-
-rectangle.y_velocity += 1.5; //gravity
-rectangle.x += rectangle.x_velocity;
-rectangle.y += rectangle.y_velocity;
-rectangle.x_velocity *= 0.9; //friction
-rectangle.y_velocity *= 0.9//friction
-
-//if rect is falling below floor line
-if(rectangle.y > 180 -16 -32){
-    rectangle.jumping = false;
-    rectangle.y = 180 -16 - 32;
-    rectangle.y_velocity = 0;
-
-}
-
-if(rectangle.x < -32){
-    rectangle.x = 320;
-
-}else if(rectangle.x > 320){
-    rectangle.x = -32;
-}
-
-context.fillStyle = "#202020";
-context.fillRect(0,0,320,180);
-context.fillStyle = "ff0000";
-context.beginPath();
-context.rect(rectangle.x,rectangle.y,rectangle.width,rectangle.height);
-context.fill()
-context.strokeStyle = "202830";
-context.lineWidth = 4;
-context.beginPath();
-context.moveTo(0,164);
-context.lineTo(320,164);
-context.stroke();
-
-
-//call update when the browser is ready to draw again
-window.requestAnimationFrame(loop);
-
-
-
-width: 1068px;
-    height: 576px;
-
-window.addEventListener("keydown", controller.keyListener);
-window.addEventListener("keyup", controller.keyListener);
-window.requestAnimationFrame(loop); */
-
-var context, controller, rectangle, loop;
-
-context = document.querySelector("canvas").getContext("2d");
-
-context.canvas.height = 180;
-context.canvas.width = 320;
-
-rectangle = {
-
-  height:32,
-  jumping:true,
-  width:32,
-  x:144, // center of the canvas
-  x_velocity:0,
-  y:0,
-  y_velocity:0
-
-};
-
-controller = {
-
-  left:false,
-  right:false,
-  up:false,
-  keyListener:function(event) {
-
-    var key_state = (event.type == "keydown")?true:false;
-
-    switch(event.keyCode){
-        case 65: //a key (left)
-        controller.left = key_state;
-        break;
-        case 87: //w key (up)
-        controller.up = key_state;
-        break;
-        case 68: //d key(right)
-        controller.right = key_state;
-        break;
-     }
+  function createChar() {
+      grid.appendChild(char);
+      char.classList.add('char');
+      charLeftSpace = platforms[0].left;
+      char.style.left = charLeftSpace + 'px';
+      char.style.bottom = charBotSpace + 'px';
 
   }
 
-};
+  function createPlats() {
+      for (let i = 0; i < platList; i++) {
+          let platGap = 100 / platList;
+          let newPlatBotSpace = 8 * i * platGap;
+          let newPlatform = new Platform(newPlatBotSpace);
+          platforms.push(newPlatform);
+          console.log(platforms);
+      }
+  }
+  class Platform {
+      constructor(newPlatBotSpace) {
+          this.bottom = newPlatBotSpace;
+          this.left = Math.random() * 983;
+          this.visual = document.createElement('div');
 
-loop = function() {
+          const visual = this.visual;
+          visual.classList.add('platform');
+          visual.style.left = this.left + 'px';
+          visual.style.bottom = this.bottom + 'px';
+          grid.append(visual);
+      }
+  }
 
-  if (controller.up && rectangle.jumping == false) {
+  function movePlatforms() {
+      if (charBotSpace > 200) {
+          platforms.forEach(platform => {
+              platform.bottom -= 4;
+              let visual = platform.visual;
+              visual.style.bottom = platform.bottom + 'px';
 
-    rectangle.y_velocity -= 20;
-    rectangle.jumping = true;
+              if(platform.bottom < 10){
+                  let firstPlat =platforms[0].visual;
+                  firstPlat.classList.remove('platform');
+                  platforms.shift()
+                  score++;
+                  console.log(platforms);
+
+                  let newPlatform = new Platform(548);
+                  platforms.push(newPlatform);
+              }
+          })
+      }
+  }
+
+  function jump() {
+      clearInterval(downTimeID)
+      isJumping = true;
+      upTimeID = setInterval(function () {
+          charBotSpace += 20;
+          char.style.bottom = charBotSpace + 'px';
+          if (charBotSpace > startPoint + 250) {
+              fall();
+          }
+      }, 30)
+
 
   }
 
-  if (controller.left) {
+  function fall() {
+      clearInterval(upTimeID);
+      isJumping = false;
+      downTimeID = setInterval(function () {
+          charBotSpace -= 5;
+          char.style.bottom = charBotSpace + 'px';
+          if (charBotSpace <= 0) {
+              gameOver();
+              clearInterval(downTimeID);
+          }
 
-    rectangle.x_velocity -= 0.5;
+          platforms.forEach(platform => {
+              if (
+                  (charBotSpace >= platform.bottom) &&
+                  (charBotSpace <= platform.bottom +15) &&
+                  ((charLeftSpace + 60) >= platform.left) &&
+                  (charLeftSpace <= (platform.left + 85)) &&
+                  !isJumping
+              ) {
+                
+                  startPoint = charBotSpace;
+                  jump();
+              }
+
+          })
+      }, 30)
+  }
+
+  function controller(e) {
+      if (e.key == "a") {
+          moveLeft();
+      }
+      else if (e.key == "d") {
+          moveRight();
+      }
+      else if (e.key == "w") {
+          moveStraight(); 
+      }
+  }
+
+  function moveLeft(){
+      if(isGoingRight){
+          clearInterval(rightTimerID);
+          isGoingRight = false;
+
+      }
+      isGoingLeft = true;
+      leftTimerID = setInterval(function (){
+          if(charLeftSpace >= 0){
+              charLeftSpace -= 5;
+              char.style.left = charLeftSpace + 'px';
+          }
+          
+      },30)
+  };
+  function moveStraight(){
+      isGoingLeft = false;
+      isGoingRight = false;
+      clearInterval(rightTimerID);
+      clearInterval(leftTimerID);
+  }
+
+  function moveRight(){
+      if(isGoingLeft){
+          clearInterval(leftTimerID);
+          isGoingLeft = false;
+      }
+      isGoingRight = true;
+      rightTimerID = setInterval(function (){
+          if(charLeftSpace <= 1008){
+              charLeftSpace += 5;
+              char.style.left = charLeftSpace + 'px';
+          }
+          
+      },30)
+  }
+
+  function gameOver() {
+      isGameOver = true;
+      while(grid.firstChild){
+          grid.removeChild(grid.firstChild);
+          
+      }
+      grid.innerHTML = score;
+      clearInterval(upTimeID);
+      clearInterval(downTimeID);
+      clearInterval(leftTimerID);
+      clearInterval(rightTimerID);
 
   }
 
-  if (controller.right) {
+  function start() {
+      if (!isGameOver) {
+          createPlats();
+          createChar();
+          setInterval(movePlatforms, 30);
+          jump();
+          document.addEventListener('keydown',controller);
+          fall();
 
-    rectangle.x_velocity += 0.5;
-
+      }
   }
-
-  rectangle.y_velocity += 1.5;// gravity
-  rectangle.x += rectangle.x_velocity;
-  rectangle.y += rectangle.y_velocity;
-  rectangle.x_velocity *= 0.9;// friction
-  rectangle.y_velocity *= 0.9;// friction
-
-  // if rectangle is falling below floor line
-  if (rectangle.y > 180 - 16 - 32) {
-
-    rectangle.jumping = false;
-    rectangle.y = 180 - 16 - 32;
-    rectangle.y_velocity = 0;
-
-  }
-
-  // if rectangle is going off the left of the screen
-  if (rectangle.x < -32) {
-
-    rectangle.x = 320;
-
-  } else if (rectangle.x > 320) {// if rectangle goes past right boundary
-
-    rectangle.x = -32;
-
-  }
-
-  context.fillStyle = "#202020";
-  context.fillRect(0, 0, 320, 180);// x, y, width, height
-  context.fillStyle = "#ff0000";// hex for red
-  context.beginPath();
-  context.rect(rectangle.x, rectangle.y, rectangle.width, rectangle.height);
-  context.fill();
-  context.strokeStyle = "#202830";
-  context.lineWidth = 4;
-  context.beginPath();
-  context.moveTo(0, 164);
-  context.lineTo(320, 164);
-  context.stroke();
-
-  // call update when the browser is ready to draw again
-  window.requestAnimationFrame(loop);
-
-};
-
-window.addEventListener("keydown", controller.keyListener)
-window.addEventListener("keyup", controller.keyListener);
-window.requestAnimationFrame(loop);
+  start();
+})

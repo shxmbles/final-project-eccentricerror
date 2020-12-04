@@ -1,0 +1,37 @@
+
+.grid{
+    width: 1068px;
+    height: 576px;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%,-50%);
+    border-radius: 25px;
+    box-shadow: 0 0 5px black, 2px 2px 5px rgba(0,0,0,.1);
+    background-image: url("/game/images/gameBackground.png");
+    background-position: center;
+    background-color: beige;
+    position: fixed;
+    font-size: 300px;
+    text-align: center;
+    
+}
+
+.char{
+    width: 60px;
+    height: 50px;
+    
+    background-image: url("/game/images/hat.png") ;
+    background-size: contain;
+    object-fit: cover;
+    
+    /* background-color: blue; */
+    position: absolute;
+}
+
+.platform{
+    width: 85px;
+    height: 15px;
+    border-radius: 10px;
+    background-color: #bdffa4;
+    position: absolute;
+}
